@@ -27,46 +27,6 @@ $(document).ready(function(){
 
 })
 
-if(document.querySelector("#frmSuscripcion")){
-    let frmSuscripcion = document.querySelector("#frmSuscripcion");
-	frmSuscripcion.addEventListener('submit',function(e) { 
-		e.preventDefault();
-
-        let name = document.querySelector("#nameSuscripcion").value;
-		let email = document.querySelector("#emailSuscripcion").value;
-        if(name ==""){
-            swal("", "El nombre es obligatorio" ,"error");
-			return false;
-        }
-		if(!fntEmailValidate(email)){
-			swal("", "El email no es válido." ,"error");
-			return false;
-		}else{
-            divLoading.style.display = "flex";
-
-            let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-            let ajaxUrl = base_url+'/Publicaciones/suscripcion'; 
-            let formData = new FormData(frmSuscripcion);
-            request.open("POST",ajaxUrl,true);
-            request.send(formData);
-            request.onreadystatechange = function(){
-                if(request.readyState != 4) return;
-                if(request.status == 200){
-                    let objData = JSON.parse(request.responseText);
-                    if(objData.status){
-                        swal("", objData.msg , "success");
-                        document.querySelector("#frmSuscripcion").reset();
-                    }else{
-                        swal("", objData.msg , "error");
-                    }
-                }
-                divLoading.style.display = "none";
-                return false;
-            
-            }
-        }
-    })
-}
 
 if(document.querySelector("#frmContacto")){
     let frmContacto = document.querySelector("#frmContacto");
@@ -122,10 +82,15 @@ if(document.querySelector("#formRegister")){
         let strEmail = document.querySelector('#txtEmailRegister').value;
         let strPassword = document.querySelector('#txtPasswordRegister').value;
         let strPasswordConfirm = document.querySelector('#txtPasswordConfirm').value;
+        let boxCheck = document.querySelector('#check').checked;
 
         if(strUsuario == "" || strEmail =="" || strPassword =="" || strPasswordConfirm==""){
             swal("Por favor", "Todos los campos son obligatorios", "error");
             return false;
+        }
+        if(boxCheck == false){
+            swal("Por favor", "Acepta las políticas de privacidad", "error");
+            return false; 
         }
         if(strPassword.length <8){
             swal("Atención", "La contraseña debe tener un mínimo de 8 carácteres." , "error");

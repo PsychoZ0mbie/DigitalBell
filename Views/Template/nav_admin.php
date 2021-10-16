@@ -68,6 +68,6 @@
         <?php
           }
         ?>
-        <li><a class="app-menu__item" href="<?= base_url(); ?>/logout"><i class="app-menu__icon fa fa-sign-out"></i><span class="app-menu__label">Cerrar sesión</span></a></li>
+        <li><a class="app-menu__item" href="<?= base_url();?>/logout"><i class="app-menu__icon fa fa-sign-out"></i><span class="app-menu__label">Cerrar sesión</span></a></li>
       </ul>
     </aside>

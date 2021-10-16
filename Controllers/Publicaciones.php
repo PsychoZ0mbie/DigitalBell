@@ -67,28 +67,6 @@
             $this->views->getView($this,"categorias",$data);
         }
 
-        public function suscripcion(){
-            if($_POST){
-                $nombre =ucwords(strClean($_POST['nameSuscripcion']));
-                $email =strtolower(strClean($_POST['emailSuscripcion']));
-                
-                $request = $this->setSuscriptor($nombre,$email);
-                
-                if($request > 0){
-
-                    $arrResponse = array('status'=> true, 'msg' => "Gracias por tu suscripción");
-                    $dataUsuario = array('nombreUsuario'=> $nombre, 'email_remitente' => EMAIL_REMITENTE, 
-                                        'asunto' =>'Suscripcion - '.NOMBRE_REMITENTE, 'email_usuario'=>$email);
-
-                    $sendEmail = sendEmail($dataUsuario, 'email_suscripcion');
-                }else{
-                    $arrResponse = array('status'=> false, 'msg' => "El email ya está registrado");
-                }
-                echo json_encode($arrResponse,JSON_UNESCAPED_UNICODE);
-
-            }
-            die();
-        }
         public function nosotros(){
             $data['page_tag'] = "Nosotros | ".NOMBRE_EMPRESA;
 			$data['page_title'] = "Nosotros | ".NOMBRE_EMPRESA;
@@ -157,6 +135,7 @@
 					$strPassword = hash("SHA256",$password);
                     $tipoId = 3;
 					$requestUser = $this->insertUsuario($strUsuario,$strEmail,$strPassword,$tipoId);
+                    $suscripcion= $this->setSuscriptor($strUsuario,$strEmail);
 
                     if($requestUser >0){
                         $arrResponse =array('status'=> true,'msg'=>'Te has registrado correctamente.');

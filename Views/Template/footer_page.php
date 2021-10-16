@@ -25,7 +25,6 @@
                         <!--<li><a href="<?=base_url();?>/Nosotros">Nosotros</a></li>-->
                         <li><a href="<?=base_url();?>/publicaciones/contacto">Contacto</a></li>
                         <li><a href="<?=base_url();?>/publicaciones/Mas" >Política de privacidad</a></li>
-                        <li><a href="<?=base_url();?>/publicaciones/Mas">Política de Cookies</a></li>
                     </ul>
                 </div>
                 <p class="item_footer text-center">Derechos de autor ©2021 David Parrado. Todos los derechos reservados</p>

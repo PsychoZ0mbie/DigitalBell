@@ -124,14 +124,14 @@
 		}
 
 		public function setPassword(){
-			if(empty($_POST['idUsuario']) || empty($_POST['txtEmail']) || empty($_POST['txtPassword']) || empty($_POST['txtToken']) || empty($_POST['txtPasswordConfirm'])){
+			if(empty($_POST['idUsuario']) || empty($_POST['txtEmailRecuperar']) || empty($_POST['txtPasswordRecuperar']) || empty($_POST['txtToken']) || empty($_POST['txtPasswordConfirmRecuperar'])){
 				$arrResponse = array('status' => false,'msg' => 'Error de datos');
 			}else{
 				$intIdpersona = intval($_POST['idUsuario']);
-				$strPassword = $_POST['txtPassword'];
-				$strEmail = strClean($_POST['txtEmail']);
+				$strPassword = $_POST['txtPasswordRecuperar'];
+				$strEmail = strClean($_POST['txtEmailRecuperar']);
 				$strToken = strClean($_POST['txtToken']);
-				$strPasswordConfirm = $_POST['txtPasswordConfirm'];
+				$strPasswordConfirm = $_POST['txtPasswordConfirmRecuperar'];
 
 				if($strPassword != $strPasswordConfirm){
 					$arrResponse = array('status' => false,'msg'=>'Las contraseñas no coinciden');

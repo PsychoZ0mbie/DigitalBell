@@ -10,11 +10,11 @@
         <section class="row">
             <div class="col-12">
                 <div class="banner">
-                    <a href="<?=base_url().'/publicaciones/articulo/'.$banner['idpost'].'/'.urlencode($banner['route']);?>"><img class="img-fluid" src="<?=$banner['image']?>" alt="<?=$banner['title']?>"></a>
+                    <a href="<?=base_url().'/publicaciones/articulo/'.$banner['idpost'].'/'.$banner['route'];?>"><img class="img-fluid" src="<?=$banner['image']?>" alt="<?=$banner['title']?>"></a>
                     <div class="banner-content">
-                        <a href="<?=base_url().'/publicaciones/articulo/'.$banner['idpost'].'/'.urlencode($banner['route']);?>"><h1 class ="fs-35 mt-2 text-white" style="word-wrap:break-word";><strong><?=$banner['title']?></strong></h1></a>
+                        <a href="<?=base_url().'/publicaciones/articulo/'.$banner['idpost'].'/'.$banner['route'];?>"><h1 class ="fs-35 mt-2 text-white" style="word-wrap:break-word";><strong><?=$banner['title']?></strong></h1></a>
                         <p class="mt-4 fs-15 text-white"><strong><?='Por '.$banner['first_name'].' '.$banner['last_name']?></strong></p>
-                        <a href="<?=base_url().'/publicaciones/categoria/'.$banner['idtopic'].'/'.urlencode($banner['route']);?>"><h4 class="mt-4 text-white"><strong><?=$banner['categoria']?></strong></h4></a>
+                        <a href="<?=base_url().'/publicaciones/categoria/'.$banner['idtopic'].'/'.$banner['route'];?>"><h4 class="mt-4 text-white"><strong><?=$banner['categoria']?></strong></h4></a>
                     </div>
                 </div>
                 <!--<div class="row mt-4">
@@ -42,7 +42,7 @@
                 <h2 class="mb-4">Lo más reciente</h2>
                 <?php
                 for ($i=0; $i < count($arrPost); $i++) { 
-                    $route = urlencode($arrPost[$i]['route']);
+                    $route = $arrPost[$i]['route'];
                     $image = $arrPost[$i]['image'];
                 ?>
                 <div class="position-relative shadow-sm p-3 mb-5 bg-white rounded container m-b-50">
@@ -92,7 +92,7 @@
                     <h3>Te puede interesar...</h3>
                     <?php
                         for ($i=0; $i < count($arrRandom); $i++) { 
-                            $route = urlencode($arrRandom[$i]['route']);
+                            $route = $arrRandom[$i]['route'];
                             $image = $arrRandom[$i]['image'];
                     ?>
                     <div class="position-relative shadow-sm p-3 mb-5 bg-white rounded container m-b-50">
@@ -111,17 +111,6 @@
                     <?php } ?>
 
                 </div>
-                <form id ="frmSuscripcion" name ="frmSuscripcion">
-                    <div class="newsletter">
-                        <h3 class="p-b-20">NewsLetter</h3>
-                        <div class="form-element ">
-                            <input type="text" id="nameSuscripcion" name="nameSuscripcion" class="input-element" placeholder="John Doe" required>
-                            <hr>
-                            <input type="email" id="emailSuscripcion" name="emailSuscripcion" class="input-element" placeholder="example@hotmail.com" required>
-                            <button class="form-btn">Suscribirse</button>
-                        </div>
-                    </div>
-                </form>
                 <div>
                     <h3 class="pb-4 pt-4">Siguenos en:</h3>
                     <a href="https://www.facebook.com/digitalbelll/" target=_blank><i class="fs-35 fab fa-facebook-square" aria-hidden="true"></i></a>

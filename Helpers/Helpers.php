@@ -89,7 +89,7 @@
         $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
         
         //Recipients
-        $mail->setFrom($remitente);
+        $mail->setFrom($remitente,$empresa);
         $mail->addAddress($emailDestino, $nombre);     //Add a recipient
         if(!empty($data['email_copia'])){
             $mail->addBCC($data['email_copia']);

@@ -69,19 +69,7 @@
                         </div>
                     </div>
                     <?php } ?>
-
                 </div>
-                <form id ="frmSuscripcion" name ="frmSuscripcion">
-                    <div class="newsletter">
-                        <h2 class="p-b-20">NewsLetter</h2>
-                        <div class="form-element ">
-                            <input type="text" id="nameSuscripcion" name="nameSuscripcion" class="input-element" placeholder="John Doe" required>
-                            <hr>
-                            <input type="email" id="emailSuscripcion" name="emailSuscripcion" class="input-element" placeholder="example@hotmail.com" required>
-                            <button class="form-btn">Suscribirse</button>
-                        </div>
-                    </div>
-                </form>
                 <div>
                     <h3 class="pb-4 pt-4">Siguenos en:</h3>
                     <a href="https://www.facebook.com/digitalbelll/" target=_blank><i class="fs-35 fab fa-facebook-square" aria-hidden="true"></i></a>

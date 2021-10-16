@@ -95,10 +95,10 @@ body{
 	width:200px;
 	margin: auto;
 }
-
 .portada img{
-    max-width: 100%;
-    object-fit: cover;
+    width:100%;
+    height: auto;
+    max-height:580px;
 }
 .delPhoto{
 	color: #FFF;
@@ -206,8 +206,7 @@ ul.show{
 }
 .categorias .blog-image img{
     height: 250px;
-    width:100%;
-    object-fit:cover;
+    width:100%;;
 }
 .categorias .blog-image a{
     color: #fff;
@@ -219,7 +218,6 @@ ul.show{
 .categoria .blog-image img{
     height: 250px;
     width:100%;
-    object-fit:cover;
 }
 
 .categoria .blog-image a{
@@ -230,18 +228,16 @@ ul.show{
 }
 
 /*--------BANNER---------*/
-.banner img{
+.banner img{ 
    width:100%;
-   height:580px;
-   object-fit:cover;
+   max-height:580px;
+   filter: brightness(0.5); 
 }
 .banner-content{
-    position: absolute;
-    background: rgb(102, 102, 102,0.6);
-    padding:5rem;
-    width:90%;
-    left:5%;
-    bottom:20%;
+     position: absolute;
+     width: 90%;
+     bottom: 10%;
+     left: 5%;
 }
 
 /*---post---*/
@@ -260,7 +256,7 @@ ul.show{
     background: rgb(48, 47, 47);
     position: absolute;
     padding: 1rem;
-    width:30%;
+    width:40%;
     top: 0%;
 }
 .categoria .blog-image .post-tag{
@@ -286,7 +282,8 @@ ul.show{
     margin-bottom:20px;
 }
 .img_articulo p{
-    margin-top:20px;    
+    margin-top:20px;  
+    font-size:16px;
 }
 .img_articulo ol{
     padding-left:15px;
@@ -324,14 +321,12 @@ ul.show{
 .blog-image img{
     height: 350px;
     width: 100%;
-    object-fit: cover;
     margin:auto;
 }
 
 .popular-post .blog-image img{
     height:250px ;
     width:100%;
-    object-fit:cover;
 }
 .img-effect{
     width:100%;
@@ -441,9 +436,11 @@ ul li.page-number.active a{
 
 .politicas h2{
     margin: 30px 0 30px 0;
+    color: #007bff;
 }
 .politicas h3{
     margin: 20px 0 20px 0;
+    color: #007bff;
 }
 .politicas p{
     font-size: 20px;
@@ -623,7 +620,7 @@ footer{
         display:none !important;
     }
     .popular-post .blog-image img{
-        height:300px !important;
+        height:250px !important;
     }
     .post-tag h4{
         font-size: 12px !important;
@@ -649,6 +646,5 @@ footer{
 @media  screen and (max-width:520px) {
     .img_articulo p img{
     width:100%;
-    height:480px;
     }
 }

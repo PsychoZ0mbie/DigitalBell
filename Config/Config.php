@@ -19,13 +19,13 @@
 	//Datos envio de correo
 	const NOMBRE_REMITENTE= "DigitalBell";
 	const EMAIL_REMITENTE = "info@digitalbell.com.co";
-	const REMITENTE_PASSWORD = "dA.197023";
+	const REMITENTE_PASSWORD = "Maricondemierda2";
 	
 	const NOMBRE_EMPRESA = "DigitalBell";
 	const DIRECCION = "Cra 36 N 15a - 03 Villavicencio/Meta";
 	const TELEFONO = "(+57)3193094264";
-	const EMAIL_CONTACTO = "contacto@digitalbell.com.co";
-	const CONTACTO_PASSWORD = "Da.197023";
+	const EMAIL_CONTACTO = "info@digitalbell.com.co";
+	const CONTACTO_PASSWORD = "Maricondemierda2";
 	const WEB_EMPRESA = "https://digitalbell.com.co";
 
 	//Datos de contacto

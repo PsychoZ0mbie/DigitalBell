@@ -67,15 +67,15 @@ document.addEventListener('DOMContentLoaded',function(){
                         var objData= JSON.parse(request.responseText);
                         if(objData.status){
                             swal({
-                                title: "",
+                                title: "Recuperar cuenta",
                                 text: objData.msg,
-                                type: "success",
-                                confirmButtonText: "Aceptar",
-                                closeOnConfirm: false,
-                            }, function(isConfirm){
-                                if(isConfirm){
-                                    window.location = base_url;
+                                icon: "success",
+                                buttons: {
+                                    value:"Ok"
                                 }
+                            }) 
+                            .then((value)=>{
+                                window.location = base_url;
                             });
                         }else{
                             swal("Atención",objData.msg,"error");
@@ -94,9 +94,10 @@ document.addEventListener('DOMContentLoaded',function(){
         formCambiarPass.onsubmit = function(e){
             e.preventDefault();
 
-            let strPassword = document.querySelector("#txtPassword").value;
-            let strPasswordConfirm = document.querySelector("#txtPasswordConfirm").value;
+            let strPassword = document.querySelector("#txtPasswordRecuperar").value;
+            let strPasswordConfirm = document.querySelector("#txtPasswordConfirmRecuperar").value;
             let idUsuario = document.querySelector("#idUsuario").value;
+            console.log(strPassword);
 
             if(strPassword == "" || strPasswordConfirm==""){
                 swal("Por favor", "Escribe la nueva contraseña.", "error");
@@ -121,15 +122,15 @@ document.addEventListener('DOMContentLoaded',function(){
                         var objData= JSON.parse(request.responseText);
                         if(objData.status){
                             swal({
-                                title: "",
-                                text: objData.msg,
-                                type: "success",
-                                confirmButtonText: "Iniciar sesión",
-                                closeOnConfirm: false,
-                            }, function(isConfirm){
-                                if(isConfirm){
-                                    window.location = base_url+'/login';
+                                title: objData.msg,
+                                text: "Por favor, inicia sesión",
+                                icon: "success",
+                                buttons: {
+                                    value:"Ok"
                                 }
+                            }) 
+                            .then((value)=>{
+                                window.location = base_url;
                             });
                         }else{
                             swal("Atención",objData.msg,"error");

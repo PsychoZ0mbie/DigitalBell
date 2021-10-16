@@ -22,7 +22,7 @@
               $params[ 'httponly' ] );
       }
   
-      header('Location: '.base_url().'/logout');
+      header('Location: '.base_url());
   }
 ?>
   <head>
