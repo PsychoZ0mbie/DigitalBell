@@ -303,6 +303,10 @@ ul.show{
     height:350px;
     object-fit:cover;
 }
+.img_articulo p iframe{
+    width:100%;
+    height:350px;
+}
 .tag-article{
     background: rgb(12, 124, 230);
     padding: 1rem;
