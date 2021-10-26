@@ -12,14 +12,14 @@
 			parent::__construct();
 		}
 
-		public function login()
+		/*public function login()
 		{
 			$data['page_tag'] = "Login | ".NOMBRE_EMPRESA;
 			$data['page_title'] = "Login | ".NOMBRE_EMPRESA;
             $data['page_name'] = "login";
             $data['page_functions_js'] = "functions_login.js";
-			$this->views->getView($this,"login",$data);
-		}
+			$this->views->getView("Home","",$data);
+		}*/
 
 		public function loginUser(){
 			if($_POST){
