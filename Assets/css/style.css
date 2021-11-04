@@ -266,7 +266,7 @@ ul.show{
 .img_articulo img{
     height:350px;
     width:100%;
-    object-fit:cover;
+    
     
 }
 .img_articulo h2{
@@ -301,7 +301,7 @@ ul.show{
 .img_articulo p img{
     width:100%;
     height:350px;
-    object-fit:cover;
+    object-fit:fill;
 }
 .img_articulo p iframe{
     width:100%;
