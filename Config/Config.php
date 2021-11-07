@@ -1,12 +1,12 @@
 <?php
 
-    const BASE_URL = "http://localhost:8080/DigitalBell";
+    const BASE_URL = "https://digitalbell.com.co";
     
 
     const DB_HOST = "localhost";
-	const DB_NAME = "db_blog";
-	const DB_USER = "root";
-	const DB_PASSWORD = "admin";
+	const DB_NAME = "u476527040_digitalbell";
+	const DB_USER = "u476527040_David_sql_1970";
+	const DB_PASSWORD = "Da.197023";
 	const DB_CHARSET = "utf8";
 	date_default_timezone_set('America/Bogota');
 
