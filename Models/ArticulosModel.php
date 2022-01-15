@@ -10,19 +10,20 @@
         public $intStatus;
         public $strPortada;
         public $strRuta;
+        public $intIdTag;
 
 		public function __construct(){
 		
 			parent::__construct();
 		}	
-        public function insertArticulo($nombre, $categoria,$titulo, $descripcion,$portada,$ruta,$status){
+        public function insertArticulo($nombre, $categoria,$titulo, $descripcion,$ruta,$status){
     
             $return = "";
             $this->intNombre = $nombre;
             $this->intCategoria = $categoria;
             $this->strTitulo = $titulo;
             $this->strDescripcion = $descripcion;
-            $this->strPortada = $portada;
+            //$this->strPortada = $portada;
             $this->strRuta = $ruta;
             $this->intStatus = $status;
     
@@ -30,8 +31,8 @@
             $request = $this->select_all($sql);
     
             if(empty($request)){
-                $query_insert  = "INSERT INTO post(person_id,topics_id,title,description,image,route,status) VALUES(?,?,?,?,?,?,?)";
-                $arrData = array($this->intNombre, $this->intCategoria, $this->strTitulo, $this->strDescripcion, $this->strPortada,$this->strRuta, $this->intStatus);
+                $query_insert  = "INSERT INTO post(person_id,topics_id,title,description,route,status) VALUES(?,?,?,?,?,?)";
+                $arrData = array($this->intNombre, $this->intCategoria, $this->strTitulo, $this->strDescripcion,$this->strRuta, $this->intStatus);
                 $request_insert = $this->insert($query_insert,$arrData);
                 $return = $request_insert;
             }else{
@@ -40,13 +41,13 @@
             return $return;
         }
 
-        public function updateArticulo($idpost, $categoria,$titulo, $descripcion,$portada,$ruta,$status){
+        public function updateArticulo($idpost, $categoria,$titulo, $descripcion,$ruta,$status){
             
             $this->intIdPost = $idpost;
             $this->intCategoria = $categoria;
             $this->strTitulo = $titulo;
             $this->strDescripcion = $descripcion;
-            $this->strPortada = $portada;
+            //$this->strPortada = $portada;
             $this->strRuta = $ruta;
             $this->intStatus = $status;
     
@@ -55,11 +56,10 @@
     
             if(empty($request)){
             
-                $sql = "UPDATE post SET topics_id=?, title=?, description=?, image=?,route=?, status=? WHERE idpost = $this->intIdPost";
+                $sql = "UPDATE post SET topics_id=?, title=?, description=?, route=?, status=? WHERE idpost = $this->intIdPost";
                 $arrData = array($this->intCategoria,
                                 $this->strTitulo,
                                 $this->strDescripcion,
-                                $this->strPortada,
                                 $this->strRuta,
                                 $this->intStatus
                                     );
@@ -78,7 +78,12 @@
 			return $request;
 		}
 
-        public function selectArticulos(){
+        public function selectArticulos(int $id,int $user){
+            if($id == 1){
+                $post ="AND u.id_person = p.person_id";
+            }else{
+                $post ="AND u.id_person = p.person_id AND u.id_person = $user";
+            }
 
             $sql = "SELECT 
             p.idpost,
@@ -86,14 +91,42 @@
             p.person_id, 
             p.topics_id, 
             p.status,
+            p.route,
             DATE_FORMAT(p.datecreated, '%d/%b/%Y') as date, 
             u.id_person, 
-            concat(u.first_name,' ',u.last_name) as autor, 
+            u.first_name, 
+            t.idtopic, 
+            t.name as categoria
+            FROM post p
+            INNER JOIN persona u, topics t
+            WHERE p.topics_id = t.idtopic  AND p.status !=0 $post
+            ORDER BY p.idpost DESC";
+            $request = $this->select_all($sql);
+            return $request;
+        }
+
+        public function selectPapelera(int $id,int $user){
+            if($id == 1){
+                $post ="AND u.id_person = p.person_id";
+            }else{
+                $post ="AND u.id_person = p.person_id AND u.id_person = $user";
+            }
+
+            $sql = "SELECT 
+            p.idpost,
+            p.title, 
+            p.person_id, 
+            p.topics_id, 
+            p.status,
+            p.route,
+            DATE_FORMAT(p.datecreated, '%d/%b/%Y') as date, 
+            u.id_person, 
+            u.first_name, 
             t.idtopic, 
             t.name as categoria
             from post p
             inner join persona u, topics t
-            where p.topics_id = t.idtopic and u.id_person = p.person_id AND p.status !=0";
+            where p.topics_id = t.idtopic  AND p.status = 0 $post";
             $request = $this->select_all($sql);
             return $request;
         }
@@ -118,6 +151,95 @@
 			$request = $this->select($sql);
 			return $request;
 		}
+        public function recovery($idArticulo){
+            $this->intIdPost = $idArticulo;
+            $sql="UPDATE post SET status = ? WHERE idpost = $this->intIdPost";
+            $array = array(2);
+            $request = $this->update($sql,$array);
+            return $request;
+        }
+        public function deleteRecoveryInfo($idArticulo){
+            $this->intIdPost = $idArticulo;
+            $sql = "DELETE FROM post WHERE idpost = $this->intIdPost";
+            $request = $this->delete($sql);
+            return $request;
+        }
+
+        public function insertImage(int $idpost, string $imagen){
+			$this->intIdPost = $idpost;
+			$this->strPortada = $imagen;
+			$query_insert  = "INSERT INTO image(post_id,name) VALUES(?,?)";
+	        $arrData = array($this->intIdPost,
+                            $this->strPortada);
+	        $request_insert = $this->insert($query_insert,$arrData);
+	        return $request_insert;
+		}
+        public function deleteImage(int $idpost, string $imagen){
+			$this->intIdPost = $idpost;
+			$this->strPortada = $imagen;
+			$query  = "DELETE FROM image 
+						WHERE post_id = $this->intIdPost
+						AND name = '{$this->strPortada}'";
+	        $request_delete = $this->delete($query);
+	        return $request_delete;
+		}
+        public function selectImage($idpost){
+            $sql = "SELECT * FROM image WHERE post_id = $idpost";
+            $query = $this->select_all($sql);
+            return $query;
+        }
+        public function insertTag($name){
+            $sql="SELECT * FROM tag WHERE title = '$name'";
+            $query = $this->select_all($sql);
+            if(empty($query)){
+                $query_insert = "INSERT INTO tag(title) VALUES (?)";
+                $arrData = array($name);
+                $request_insert = $this->insert($query_insert,$arrData);
+                $return = $request_insert;
+            }else{
+                $return = "exist";
+            }
+            return $return;
+        }
+        public function selectTags(){
+            $sql="SELECT * FROM tag ORDER BY title";
+            $query= $this->select_all($sql);
+            return $query;
+        }
+        public function selectTag($idpost){
+            $sql = "SELECT p.tag_id, 
+                            t.id, 
+                            t.title 
+                    FROM posttag p
+                    INNER JOIN tag t
+                    WHERE p.post_id=$idpost AND p.tag_id = t.id";
+            $query = $this->select_all($sql);
+            return $query;
+        }
+        public function insertSelectTag($idArticulo,$idtag){
+            $this->intIdPost = $idArticulo;
+            $this->intIdTag = $idtag;
+
+            $sql = "SELECT * FROM posttag WHERE tag_id = $this->intIdTag AND post_id = $this->intIdPost";
+            $query = $this->select_all($sql);
+
+            if(empty($query)){
+                $query_insert = "INSERT INTO posttag(tag_id,post_id) VALUES (?,?)";
+                $arrData = array($this->intIdTag,$this->intIdPost);
+                $request_insert = $this->insert($query_insert,$arrData);
+                $return = $request_insert;
+            }else{
+                $return ="exist";
+            }
+            return $return;
+        }
+        public function deleteTag($idArticulo,$idtag){
+            $this->intIdPost = $idArticulo;
+            $this->intIdTag = $idtag;
+            $sql = "DELETE FROM posttag WHERE tag_id = $this->intIdTag AND post_id = $this->intIdPost";
+            $request = $this->delete($sql);
+            return $request;
+        }
 	}
 
 

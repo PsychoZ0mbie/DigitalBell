@@ -17,9 +17,7 @@ tableArticulo = $('#tableArticulos').dataTable( {
         "dataSrc":""
     },
     "columns":[
-        {"data":"idpost"},
         {"data":"title"},
-        {"data":"autor"},
         {"data":"categoria"},
         {"data":"status"},
         {"data":"date"},
@@ -67,8 +65,66 @@ tableArticulo = $('#tableArticulos').dataTable( {
     "order":[[0,"asc"]]  
 });
 
+tablePapelera = $('#tablePaper').dataTable( {
+    "aProcessing":true,
+    "aServerSide":true,
+    "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"
+    },
+    "ajax":{
+        "url": " "+base_url+"/Articulos/getPapelera",
+        "dataSrc":""
+    },
+    "columns":[
+        {"data":"title"},
+        {"data":"categoria"},
+        {"data":"date"},
+        {"data":"options"}
+    ],
+    'dom': 'lBfrtip',
+    'buttons': [
+        {
+            "extend": "copyHtml5",
+            "text": "<i class='far fa-copy'></i> Copiar",
+            "titleAttr":"Copiar",
+            "className": "btn btn-secondary",
+            "exportOptions": { 
+                "columns": [ 0, 1, 2, 3, 4] 
+            }
+        },{
+            "extend": "excelHtml5",
+            "text": "<i class='fas fa-file-excel'></i> Excel",
+            "titleAttr":"Exportar a Excel",
+            "className": "btn btn-success",
+            "exportOptions": { 
+                "columns": [ 0, 1, 2, 3, 4] 
+            }
+        },{
+            "extend": "pdfHtml5",
+            "text": "<i class='fas fa-file-pdf'></i> PDF",
+            "titleAttr":"Exportar a PDF",
+            "className": "btn btn-danger",
+            "exportOptions": { 
+                "columns": [ 0, 1, 2, 3, 4] 
+            }
+        },{
+            "extend": "csvHtml5",
+            "text": "<i class='fas fa-file-csv'></i> CSV",
+            "titleAttr":"Exportar a CSV",
+            "className": "btn btn-info",
+            "exportOptions": { 
+                "columns": [ 0, 1, 2, 3, 4] 
+            }
+        }
+    ],
+    "responsieve":"true",
+    "bDestroy": true,
+    "iDisplayLength": 10,
+    "order":[[0,"asc"]]  
+});
+
 window.addEventListener('load',function(){
-   if(document.querySelector("#fileImage")){
+   /*if(document.querySelector("#fileImage")){
         let foto = document.querySelector("#fileImage");
         foto.onchange = function(e) {
             let uploadFoto = document.querySelector("#fileImage").value;
@@ -103,20 +159,31 @@ window.addEventListener('load',function(){
                     return false;
                 }else{
                     
-                }*/
+                }
                 document.querySelector('#imgUrl').setAttribute("src",url);
             }
 
         }
+    }*/
+    if(document.querySelector("#pills-make-tab")){
+        let btn = document.querySelector("#pills-make-tab");
+        btn.onclick = function(){
+            document.querySelector('#pills-make-tab').classList.add("active");
+            document.querySelector('#pills-make').classList.add("active","show");
+            document.querySelector('#pills-articles').classList.add("d-none");
+            document.querySelector('#pills-articles-tab').classList.add("d-none");
+            document.querySelector('#pills-paper').classList.add("d-none");
+            document.querySelector('#pills-paper-tab').classList.add("d-none");
+        }
     }
-
     let formArticulo = document.querySelector("#formArticulo");
+    document.querySelector("#containerGallery").classList.add("d-none");
     formArticulo.onsubmit = function(e) {
         e.preventDefault();
 
         let strNombre = document.querySelector('#txtNombre').value;
         let strDescripcion = document.querySelector('#txtDescripcion').value;
-        let urlImage = document.querySelector('#urlImage').value;
+        //let urlImage = document.querySelector('#urlImage').value;
         let intCategoria = document.querySelector('#listCategoria').value;
         let intStatus = document.querySelector('#listStatus').value;        
         if(strNombre == '' || strDescripcion == '' || intStatus == '' || intCategoria == ''){
@@ -138,24 +205,21 @@ window.addEventListener('load',function(){
         request.send(formData);
         request.onreadystatechange = function(){
            if(request.readyState == 4 && request.status == 200){
-                
                 let objData = JSON.parse(request.responseText);
                 if(objData.status)
                 {
-                    if(rowTable == ""){
-                        tableArticulo.api().ajax.reload();
-                    }else{
-                        htmlStatus = intStatus == 1 ? 
-                        '<span class="badge badge-success">Activo</span>' : 
-                        '<span class="badge badge-danger">Inactivo</span>';
-                        rowTable.cells[1].textContent = strNombre;
-                        rowTable.cells[2].textContent = document.querySelector("#listCategoria").selectedOptions[0].text;
-                        rowTable.cells[4].innerHTML = htmlStatus;
-                        rowTable = "";
-                    }
-                    $('#modalformArticulos').modal("hide");
-                    formArticulo.reset();
+                    document.querySelector("#containerGallery").classList.remove("d-none");
+                    document.querySelector("#make").classList.remove("d-none");
+                    document.querySelector("#list").classList.remove("d-none");
+
+                    document.querySelector("#idArticulo").value = objData.idpost;
+                    tableArticulo.api().ajax.reload();
+                    //formArticulo.reset();
+                    document.querySelector('#btnCancel').innerHTML ="Regresar";
+                    document.querySelector("#btnCancel").classList.replace("btn-danger","btn-secondary");
+                    
                     swal("Articulos", objData.msg ,"success");
+                    
                     //removePhoto();
                 }else{
                     swal("Error", objData.msg , "error");
@@ -166,11 +230,188 @@ window.addEventListener('load',function(){
         }
 
     }
+
+    if(document.querySelector("#btnTag")){
+        let btnTag = document.querySelector("#btnTag");
+        btnTag.onclick = function(){
+            let nameTag = document.querySelector("#txtTag").value;
+            let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+            let ajaxUrl = base_url+"/Articulos/setTag/"+nameTag;
+            request.open("GET",ajaxUrl,true);
+            request.send();
+            request.onreadystatechange = function(){
+                if(request.status == 200 && request.readyState == 4){
+                    let objData = JSON.parse(request.responseText);
+                    if(objData.status){
+                        swal("Etiqueta",objData.msg,"success");
+                        fntTags();
+                        document.querySelector("#txtTag").value="";
+                    }else{
+                        swal("Error", objData.msg,"error");
+                    }
+                }
+            }
+        }
+    }
+    if(document.querySelector("#listTag")){
+        let addtag = document.querySelector("#listTag");
+        addtag.onchange = function(){
+            let key = Date.now();
+            let value = document.querySelector("#listTag").value;
+            let idPost = document.querySelector("#idArticulo").value;
+            
+            let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+            let ajaxUrl = base_url+"/Articulos/setSelectTag";
+            let formData = new FormData();
+
+            formData.append("idtag",value);
+            formData.append("idpost",idPost);
+            request.open("POST",ajaxUrl,true);
+            request.send(formData);
+            request.onreadystatechange = function(){
+                if(request.status == 200 && request.readyState == 4){
+                    let objData = JSON.parse(request.responseText);
+                    if(objData.status){
+                        let text = $( "#listTag option:selected" ).text();
+                        let newElement = document.createElement("div");
+                        newElement.id = "div"+key;
+                        newElement.innerHTML = `
+                            <input type="hidden" value="${value}" id="tag${key}">
+                            <button  class="btnDeleteTag btn-outline-secondary btn-sm" 
+                            type="button" onclick="fntDelTag('#div${key}')">${text}</button>
+                            `
+                        document.querySelector("#containerTags").appendChild(newElement);
+                    }else{
+                        swal("Atención",objData.msg,"warning");
+                    }
+                }
+            }
+        }
+    }
+
+    if(document.querySelector(".btnAddImage")){
+        let btnAddImage =  document.querySelector(".btnAddImage");
+        btnAddImage.onclick = function(e){
+         let key = Date.now();
+         let newElement = document.createElement("div");
+         newElement.id= "div"+key;
+         newElement.innerHTML = `
+             <div class="prevImage"></div>
+             <input type="file" name="foto" id="img${key}" class="inputUploadfile">
+             <label for="img${key}" class="btnUploadfile"><i class="fas fa-upload "></i></label>
+             <button class="btnDeleteImage d-none" type="button" onclick="fntDelItem('#div${key}')"><i class="fas fa-trash-alt"></i></button>`;
+         document.querySelector("#containerImages").appendChild(newElement);
+         document.querySelector("#div"+key+" .btnUploadfile").click();
+         fntInputFile();
+        }
+    }
+    fntInputFile();
     fntCategorias();
-    fntAutor();
+    fntTags();
 },false);
 
-if(document.querySelector(".methodImage")){
+function fntInputFile(){
+    let inputUploadfile = document.querySelectorAll(".inputUploadfile");
+    inputUploadfile.forEach(function(inputUploadfile) {
+        inputUploadfile.addEventListener('change', function(){
+            let idArticulo = document.querySelector("#idArticulo").value;
+            let parentId = this.parentNode.getAttribute("id");
+            let idFile = this.getAttribute("id");            
+            let uploadFoto = document.querySelector("#"+idFile).value;
+            let fileimg = document.querySelector("#"+idFile).files;
+            let prevImg = document.querySelector("#"+parentId+" .prevImage");
+            let nav = window.URL || window.webkitURL;
+            if(uploadFoto !=''){
+                let type = fileimg[0].type;
+                let name = fileimg[0].name;
+                if(type != 'image/jpeg' && type != 'image/jpg' && type != 'image/png'){
+                    prevImg.innerHTML = "Archivo no válido";
+                    uploadFoto.value = "";
+                    return false;
+                }else{
+                    let objeto_url = nav.createObjectURL(this.files[0]);
+                    prevImg.innerHTML = `<img class="loading" src="${base_url}/Assets/images/loading/loading.svg" >`;
+
+                    let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+                    let ajaxUrl = base_url+'/Articulos/setImage'; 
+                    let formData = new FormData();
+                    formData.append('idArticulo',idArticulo);
+                    formData.append("foto", this.files[0]);
+                    request.open("POST",ajaxUrl,true);
+                    request.send(formData);
+                    request.onreadystatechange = function(){
+                        if(request.readyState != 4) return;
+                        if(request.status == 200){
+                            let objData = JSON.parse(request.responseText);
+                            if(objData.status){
+                                prevImg.innerHTML = `<img src="${objeto_url}">`;
+                                document.querySelector("#"+parentId+" .btnDeleteImage").setAttribute("imgname",objData.imgname);
+                                document.querySelector("#"+parentId+" .btnUploadfile").classList.add("d-none");
+                                document.querySelector("#"+parentId+" .btnDeleteImage").classList.remove("d-none");
+                            }else{
+                                swal("Error", objData.msg , "error");
+                            }
+                        }
+                    }
+
+                }
+            }
+
+        });
+    });
+}
+function fntDelItem(element){
+    let nameImg = document.querySelector(element+' .btnDeleteImage').getAttribute("imgname");
+    let idArticulo = document.querySelector("#idArticulo").value;
+    let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+    let ajaxUrl = base_url+'/Articulos/delFile'; 
+
+    let formData = new FormData();
+    formData.append('idarticulo',idArticulo);
+    formData.append("file",nameImg);
+    request.open("POST",ajaxUrl,true);
+    request.send(formData);
+    request.onreadystatechange = function(){
+        if(request.readyState != 4) return;
+        if(request.status == 200){
+            let objData = JSON.parse(request.responseText);
+            if(objData.status)
+            {
+                let itemRemove = document.querySelector(element);
+                itemRemove.parentNode.removeChild(itemRemove);
+            }else{
+                swal("", objData.msg , "error");
+            }
+        }
+    }
+}
+function fntDelTag(element){
+    let idTag = document.querySelector(element+' input').value;
+    let idArticulo = document.querySelector("#idArticulo").value; 
+    
+    let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+    let ajaxUrl = base_url+"/Articulos/delSelectTag";
+    let formData = new FormData();
+
+    formData.append("idtag",idTag);
+    formData.append("idpost",idArticulo);
+    request.open("POST",ajaxUrl,true);
+    request.send(formData);
+    request.onreadystatechange = function(){
+        if(request.status == 200 && request.readyState == 4){
+            let objData = JSON.parse(request.responseText);
+            if(objData.status){
+                let itemRemove = document.querySelector(element);
+                itemRemove.parentNode.removeChild(itemRemove);
+            }else{
+                swal("", objData.msg , "error");
+            }
+        }
+    }
+}
+
+
+/*if(document.querySelector(".methodImage")){
     let op = document.querySelectorAll(".methodImage");
     op.forEach(function(op){
         op.addEventListener('click',function(){
@@ -183,7 +424,7 @@ if(document.querySelector(".methodImage")){
             }
         });  
     });
-}
+}*/
 
 tinymce.init({
     relative_urls: 0,
@@ -233,12 +474,17 @@ function fntViewInfo(idcategoria){
     }
 }
 
-function fntEditInfo(element, idarticulo){
+function fntEditInfo(idarticulo){
 
-    rowTable = element.parentNode.parentNode.parentNode;
+    //rowTable = element.parentNode.parentNode.parentNode;
 
-    document.querySelector('#titleModal').innerHTML ="Actualizar artículo";
-    document.querySelector('.modal-header').classList.replace("headerRegister", "headerUpdate");
+    document.querySelector('#pills-make-tab').innerHTML ="Actualizar artículo";
+    document.querySelector('#pills-make-tab').classList.add("active");
+    document.querySelector('#pills-make').classList.add("active","show");
+    document.querySelector('#pills-articles').classList.add("d-none");
+    document.querySelector('#pills-articles-tab').classList.add("d-none");
+    document.querySelector('#pills-paper').classList.add("d-none");
+    document.querySelector('#pills-paper-tab').classList.add("d-none");
     document.querySelector('#btnActionForm').classList.replace("btn-primary", "btn-info");
     document.querySelector('#btnText').innerHTML ="Actualizar";
 
@@ -250,41 +496,134 @@ function fntEditInfo(element, idarticulo){
         if(request.readyState == 4 && request.status == 200){
             let objData = JSON.parse(request.responseText);
             if(objData.status){
+
+                let objDataTag = objData.data;
+                let objDataImg = objData.data;
+                let htmlTags="";
+                let htmlImage="";
                 document.querySelector('#idArticulo').value = objData.data.idpost;
                 document.querySelector("#txtNombre").value = objData.data.title;
                 document.querySelector("#txtDescripcion").value = objData.data.description;
                 document.querySelector('#listCategoria').value = objData.data.topics_id;
-
-                document.querySelector("#urlImage").value = objData.data.image;
-                document.querySelector('#imgUrl').setAttribute("src",objData.data.image); 
-            
-                //document.querySelector("#fileImage").value = objData.data.image;
-                document.querySelector('#imgFile').setAttribute("src",objData.data.image); 
-                
                 tinymce.activeEditor.setContent(objData.data.description); 
-                $('#listNombre').selectpicker('render');
+                
                 $('#listCategoria').selectpicker('render');
+
                 if(objData.data.status == 1){
                     document.querySelector("#listStatus").value = 1;
                 }else{
                     document.querySelector("#listStatus").value = 2;
                 }
-                
                 $('#listStatus').selectpicker('render');
+
+                if(objDataImg.img.length > 0){
+                    let objDataImages = objDataImg.img;
+                    for (let p = 0; p < objDataImages.length; p++) {
+                        let key = Date.now()+p;
+                        htmlImage +=`<div id="div${key}">
+                            <div class="prevImage">
+                            <img src="${objDataImages[p].url}"></img>
+                            </div>
+                            <button type="button" class="btnDeleteImage" onclick="fntDelItem('#div${key}')" imgname="${objDataImages[p].name}">
+                            <i class="fas fa-trash-alt"></i></button></div>`;
+                    }
+                    
+                }
+
+                if(objDataTag.tags.length){
+                    let objDataTags = objDataTag.tags;
+                    for (let p = 0; p < objDataTags.length; p++) {
+                        let key = Date.now()+p;
+                        htmlTags += `<div id="div${key}">
+                            <input type="hidden" value="${objDataTags[p].tag_id}" id="tag${key}">
+                            <button  class="btnDeleteTag btn-outline-secondary btn-sm" 
+                            type="button" onclick="fntDelTag('#div${key}')">${objDataTags[p].tagtitle}</button></div>
+                            `
+                    }
+                }
+
+                document.querySelector("#containerTags").innerHTML = htmlTags;
+                document.querySelector("#containerImages").innerHTML = htmlImage;
+                document.querySelector("#containerGallery").classList.remove("d-none");
+                /*if(document.querySelector("#btnActionForm")){
+                    let btnAction = document.querySelector("#btnActionForm");
+                    btnAction.onclick = function(){
+                        
+                    }
+                }*/
+                document.querySelector("#make").classList.remove("d-none");
+                document.querySelector("#list").classList.remove("d-none");
 
             }else{
                 swal("Error", objData.msg , "error");
             }
         }
-        $('#modalFormArticulos').modal('show');
     }
+}
+function fntRecoveryInfo(idarticulo){
+    let request = (window.XMLHttpRequest) ? new XMLHttpRequest : new ActiveXObject("Microsoft.XMLHTTP");
+    let ajaxUrl = base_url+"/articulos/getRecoveryArticulo/"+idarticulo;
+    //let strData = "idArticulo="+idarticulo;
+     request.open("GET",ajaxUrl,true);
+     //request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+     request.send();
+     divLoading.style.display = "flex";
+     request.onreadystatechange = function(){
+         if(request.status == 200 && request.readyState == 4){
+             let objData = JSON.parse(request.responseText);
+             if(objData.status){
+                 swal("Papelera",objData.msg, "success");
+                 tableArticulo.api().ajax.reload();
+                 tablePapelera.api().ajax.reload();
+             }else{
+                swal("Atención",objData.msg, "error");
+             }
+         }
+         divLoading.style.display = "none";
+     }
+}
+
+function fntDelfEver(idarticulo){
+
+    swal({
+        title: "Eliminar",
+        text: "¿Estas segur@? Se eliminará para siempre...",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Si, eliminar",
+        cancelButtonText: "No, cancelar",
+        closeOnConfirm: false,
+        closeOnCancel: true
+    }, function(isConfirm) {
+        if(isConfirm){
+            let request = (window.XMLHttpRequest) ? new XMLHttpRequest : new ActiveXObject("Microsoft.XMLHTTP");
+            let ajaxUrl = base_url+"/articulos/deleteRecovery/"+idarticulo;
+            request.open("GET",ajaxUrl,true);
+            request.send();
+            divLoading.style.display = "flex";
+            request.onreadystatechange= function(){
+                if(request.status == 200 && request.readyState == 4){
+                    objData = JSON.parse(request.responseText);
+                    if(objData.status){
+                        swal("Eliminado",objData.msg,"success");
+                        tablePapelera.api().ajax.reload();
+                    }else{
+                        swal("Atención",objData.msg,"error");
+                    }
+                }
+                divLoading.style.display = "none";
+            }
+        }
+
+    });
+
 }
 
 function fntDelInfo(idarticulo){
 
     swal({
-        title: "Eliminar artículo",
-        text: "¿Está seguro de eliminar el artículo?",
+        title: "Eliminar",
+        text: "¿Estas segur@?",
         type: "warning",
         showCancelButton: true,
         confirmButtonText: "Si, eliminar",
@@ -301,6 +640,7 @@ function fntDelInfo(idarticulo){
             request.open("POST",ajaxUrl,true);
             request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             request.send(strData);
+            divLoading.style.display = "flex";
             request.onreadystatechange = function(){
                 if(request.readyState == 4 && request.status == 200){
                     let objData = JSON.parse(request.responseText);
@@ -308,31 +648,16 @@ function fntDelInfo(idarticulo){
                     {
                         swal("Eliminado", objData.msg , "success");
                         tableArticulo.api().ajax.reload();
+                        tablePapelera.api().ajax.reload();
                     }else{
                         swal("Atención", objData.msg , "error");
                     }
                 }
+                divLoading.style.display = "none";
             }
         }
 
     });
-}
-
-function fntAutor(){
-    if(document.querySelector('#listNombre')){
-
-        let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-        let ajaxUrl  = base_url+'/Usuarios/getSelectUsuario';
-        request.open("GET",ajaxUrl ,true);
-        request.send(); 
-    
-        request.onreadystatechange = function(){
-            if(request.readyState ==4 && request.status ==200){
-                document.querySelector('#listNombre').innerHTML = request.responseText;
-                $('#listNombre').selectpicker('render');
-            }
-        }
-    }
 }
 
 function fntCategorias(){
@@ -351,6 +676,24 @@ function fntCategorias(){
         }
     }
 }
+function fntTags(){
+    if(document.querySelector('#listTag')){
+        let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+        let ajaxUrl  = base_url+'/Articulos/getSelectTags';
+        request.open("GET",ajaxUrl ,true);
+        request.send(); 
+    
+        request.onreadystatechange = function(){
+            if(request.readyState ==4 && request.status ==200){
+                document.querySelector('#listTag').innerHTML = request.responseText;
+                $('#listTag').selectpicker('refresh');
+                $('#listTag').selectpicker({
+                    noneSelectedText : 'Seleccione...'
+                })
+            }
+        }
+    }
+}
 
 /*function removePhoto(){
     document.querySelector('#foto').value ="";
@@ -359,14 +702,3 @@ function fntCategorias(){
         document.querySelector('#img').remove();
     }
 }*/
-
-function openModal(){
-    rowTable ="";
-    document.querySelector('#idArticulo').value ="";
-    document.querySelector('.modal-header').classList.replace("headerUpdate", "headerRegister");
-    document.querySelector('#btnActionForm').classList.replace("btn-info", "btn-primary");
-    document.querySelector('#btnText').innerHTML ="Guardar";
-    document.querySelector('#titleModal').innerHTML = "Nuevo Articulo";
-    document.querySelector("#formArticulo").reset();
-	$('#modalFormArticulos').modal('show');
-}
