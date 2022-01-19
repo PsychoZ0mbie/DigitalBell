@@ -37,7 +37,7 @@
                 <div class="tile">
                   <div class="tile-body">
                     <div class="table-responsive">
-                      <table class="table table-hover table-bordered" id="tableArticulos">
+                      <table class="table table-hover table-bordered w-100" id="tableArticulos">
                         <thead>
                           <tr>
                             <th>Título</th>
@@ -63,8 +63,12 @@
               <div class="col-md-12">
                 <div class="row">
                   <div class="form-group col-md-12">
-                    <label class="control-label">Título <span class="required"></span></label>
+                    <label class="control-label">Título corto (30 carácteres)</label>
                     <input class="form-control" id="txtNombre" name="txtNombre" type="text" required="">
+                  </div>
+                  <div class="form-group col-md-12">
+                    <label class="control-label">Título (70 carácteres)<span class="text-secondary"> opcional</span></label>
+                    <input class="form-control" id="txtTitulo" name="txtTitulo" type="text">
                   </div>
                 </div>
                 <div class="row">

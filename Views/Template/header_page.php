@@ -2,34 +2,7 @@
 <!DOCTYPE html>
   <html lang="en">
   <head>
-      
-      <?php
         
-        define('MAX_TIME', 3600*1);
-            if(isset($_SESSION['time']) && (time()-$_SESSION['time']>MAX_TIME)){
-                destruir_session();
-            }
-            $_SESSION['time'] = time();
-            function destruir_session() {
-        
-              $_SESSION = array();
-              if ( ini_get( 'session.use_cookies' ) ) {
-                  $params = session_get_cookie_params();
-                  setcookie(
-                      session_name(),
-                      '',
-                      time() - MAX_TIME,
-                      $params[ 'path' ],
-                      $params[ 'domain' ],
-                      $params[ 'secure' ],
-                      $params[ 'httponly' ] );
-              }
-          
-              session_destroy();
-          }
-    ?>
-    
-    
     <?php
       
       $empresa = NOMBRE_EMPRESA;

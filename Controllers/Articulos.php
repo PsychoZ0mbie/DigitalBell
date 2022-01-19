@@ -31,6 +31,7 @@
 
                         $intIdArticulo = intval($_POST['idArticulo']);
 						$strTitulo = strClean($_POST['txtNombre']);
+						$strTituloC = strClean($_POST['txtTitulo']);
                         $intNombre = $_SESSION['idUser'];
 						$intCategoria = intVal($_POST['listCategoria']);
                         $strDescipcion = strClean($_POST['txtDescripcion']);
@@ -61,7 +62,7 @@
                             //Crear
                             if($_SESSION['permisosMod']['w']){
 
-                                $request_articulo = $this->model->insertArticulo($intNombre, $intCategoria,$strTitulo, $strDescipcion,$ruta,$intStatus);
+                                $request_articulo = $this->model->insertArticulo($intNombre, $intCategoria,$strTitulo,$strTituloC, $strDescipcion,$ruta,$intStatus);
                                 $option = 1;
                             }
                         }else{
@@ -72,7 +73,7 @@
 										$imgPortada = $_POST['foto_actual'];
 									}
 								}*/
-                                $request_articulo = $this->model->updateArticulo($intIdArticulo, $intCategoria,$strTitulo, $strDescipcion,$ruta,$intStatus);
+                                $request_articulo = $this->model->updateArticulo($intIdArticulo, $intCategoria,$strTitulo,$strTituloC,$strDescipcion,$ruta,$intStatus);
 								$option = 2;
                             }
                         }
@@ -92,7 +93,7 @@
                             }
                         }else if($request_articulo == 'exist'){
                             
-                            $arrResponse = array('status' => false, 'msg' => '¡Atención! El artículo ya existe.');
+                            $arrResponse = array('status' => false, 'msg' => 'El artículo ya existe o se encuentra en la papelera.');
                         }else{
                             $arrResponse = array("status" => false, "msg" => 'No es posible almacenar los datos.');
                         }
@@ -108,7 +109,7 @@
 
                 $arrData = $this->model->selectArticulos($_SESSION['userData']['idrol'],$_SESSION['idUser']);
 				for ($i=0; $i < count($arrData); $i++) {
-	
+
 					$btnView = '';
 					$btnEdit = '';
 					$btnDelete = '';
@@ -239,7 +240,7 @@
 
 					$requestDelete = $this->model->deleteArticulo($intIdArticulo);
 					if($requestDelete == 'ok'){
-						$arrResponse = array('status' => true, 'msg' => 'Se ha eliminado.');
+						$arrResponse = array('status' => true, 'msg' => 'Se ha enviado a la papelera');
 					}else{
 						$arrResponse = array('status' => false, 'msg' => 'Error, inténtelo más tarde.');
 					}

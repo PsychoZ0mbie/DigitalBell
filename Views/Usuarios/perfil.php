@@ -1,22 +1,13 @@
 <?php 
   headerAdmin($data); 
-  getModal('modalPerfil',$data);
+  
 ?>
     <main class="app-content">
       <div class="row user">
-        <div class="col-md-12">
-          <div class="profile">
-            <div class="info"><img class="user-img" src="<?= media();?>/images/uploads/avatar.png">
-              <h4><?= $_SESSION['userData']['first_name'].' '.$_SESSION['userData']['last_name'];?></h4>
-              <p><?= $_SESSION['userData']['rolname'];?></p>
-            </div>
-            <div class="cover-image"></div>
-          </div>
-        </div>
         <div class="col-md-3">
           <div class="tile p-0">
             <ul class="nav flex-column nav-tabs user-tabs">
-              <li class="nav-item"><a class="nav-link active" href="#user-timeline" data-toggle="tab">Datos personales</a></li>
+              <li class="nav-item"><a class="nav-link active" href="#user-timeline" data-toggle="tab">Mi perfil</a></li>
             </ul>
           </div>
         </div>
@@ -25,30 +16,74 @@
             <div class="tab-pane active" id="user-timeline">
               <div class="timeline-post">
                 <div class="post-media">
-                  <div class="content">
-                    <h5>DATOS PERSONALES <button class="btn btn-sm btn-info" type="button" onclick="openModalPerfil();"><i class="fas fa-pencil-alt" aria-hidden="true"></i></button></h5>
-                  </div>
+                    <h5>Datos personales</h5>
+                    <?php
+                    //dep($_SESSION['userData']);exit;
+                    ?>
                 </div>
-                <table class="table table-bordered">
-                    <tbody>
-                        <tr>
-                        <td>Nombres:</td>
-                        <td><?= $_SESSION['userData']['first_name']; ?></td>
-                        </tr>
-                        <tr>
-                        <td>Apellidos:</td>
-                        <td><?= $_SESSION['userData']['last_name']; ?></td>
-                        </tr>
-                        <tr>
-                        <td>Teléfono:</td>
-                        <td><?= $_SESSION['userData']['phone']; ?></td>
-                        </tr>
-                        <tr>
-                        <td>Email:</td>
-                        <td><?= $_SESSION['userData']['email']; ?></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <form id="formPerfil" name="formPerfil" class="form-horizontal mt-4">
+                  <div class="profile-image">
+                    <img src="<?= media();?>/images/uploads/<?=$_SESSION['userData']['picture']?>">
+                    <label for="profile-img"><i class="fas fa-cloud-upload-alt"></i></label>
+                    <input type="file" id="profile-img" name="profile-img">
+                  </div>
+                  <div class="form-row">
+                      <div class="form-group col-md-6">
+                          <label for="txtNombre">Nombre y Apellido</label>
+                          <input type="text" class="form-control" id="txtNombre" name="txtNombre" value="<?= $_SESSION['userData']['first_name']; ?>" required="">
+                      </div>
+                      <div class="form-group col-md-6">
+                          <label for="txtEmail">Email</label>
+                          <input type="email" class="form-control valid validEmail" id="txtEmail" name="txtEmail" value="<?= $_SESSION['userData']['email']; ?>" required="" readonly disabled >
+                      </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for ="listDepartamento">Departamento</label>
+                        <select name="listDepartamento" id="listDepartamento" class="form-control" data-live-search="true"></select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for ="listCiudad">Ciudad</label>
+                        <select name="listCiudad" id="listCiudad" class="form-control" data-live-search="true"></select>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                      <div class="form-group col-md-6">
+                          <label for="txtTelefono">Teléfono</label>
+                          <input type="text" class="form-control valid validNumber" id="txtTelefono" name="txtTelefono" value="<?= $_SESSION['userData']['phone']; ?>" required="" onkeypress="return controlTag(event);">
+                      </div>
+                      <div class="form-group col-md-6">
+                          <label for="txtDir">Dirección</label>
+                          <input type="text" class="form-control" id="txtDir" name="txtDir" value="<?=$_SESSION['userData']['address']?>" required="">
+                      </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for ="listId">Tipo de identificación</label>
+                        <select name="listId" id="listId" class="form-control" data-live-search="true"></select>
+                    </div>
+                      <div class="form-group col-md-6">
+                          <label for="txtId">Número de identificación</label>
+                          <input type="text" class="form-control" id="txtId" name="txtId" value="<?=$_SESSION['userData']['identification']?>" required="">
+                      </div>
+                  </div>
+                  <div class="post-media mt-4">
+                    <h5>Cambiar contraseña</h5>
+                  </div>
+                  <div class="form-row">
+                      <div class="form-group col-md-6">
+                          <label for="txtPassword">Contraseña</label>
+                          <input type="password" class="form-control" id="txtPassword" name="txtPassword" >
+                      </div>
+                      <div class="form-group col-md-6">
+                          <label for="txtPasswordConfirm">Confirmar contraseña</label>
+                          <input type="password" class="form-control" id="txtPasswordConfirm" name="txtPasswordConfirm" >
+                      </div>
+                  </div>
+                  <div class="tile-footer">
+                      <button id="btnActionForm" class="btn btn-info" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i><span id="btnText">Actualizar</span></button>
+                  </div>
+                </form>
               </div>
             </div>
           </div>

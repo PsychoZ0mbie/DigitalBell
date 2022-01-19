@@ -50,7 +50,7 @@
         <?php
           if(!empty($_SESSION['permisos'][4]['r'])){
         ?>
-        <li><a class="app-menu__item" href="<?=base_url();?>/articulos"><i class="app-menu__icon fa fa-share-square"></i><span class="app-menu__label">Publicaciones</span></a></li>
+        <li><a class="app-menu__item" href="<?=base_url();?>/articulos"><i class="app-menu__icon fa fa-share-square"></i><span class="app-menu__label">Mi blog</span></a></li>
         <?php
           }
         ?>

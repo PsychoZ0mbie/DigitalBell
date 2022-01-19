@@ -4,9 +4,14 @@
 	{
 		private $intIdUsuario;
 		private $strNombre;
-		private $strApellido;
+		private $strPicture;
 		private $intTelefono;
+		private $strAddress;
 		private $strEmail;
+		private $intDepartmentId;
+		private $intCityId;
+		private $intTypeId;
+		private $strIdentification;
 		private $strPassword;
 		private $strToken;
 		private $intTipoId;
@@ -73,7 +78,7 @@
 
 		public function selectUsuario(int $idpersona){
 			$this->intIdUsuario = $idpersona;
-			$sql = "SELECT p.id_person,p.first_name,p.last_name,p.phone,p.email,r.idrol,r.rolname,p.status, DATE_FORMAT(p.datecreated, '%d/%m/%Y') as fechaRegistro 
+			$sql = "SELECT p.id_person,p.first_name,p.picture,p.phone,p.address,p.email,p.department_id,p.city_id,p.type_id,identification,r.idrol,r.rolname,p.status, DATE_FORMAT(p.datecreated, '%d/%m/%Y') as fechaRegistro 
 					FROM persona p
 					INNER JOIN rol r
 					ON p.rolid = r.idrol
@@ -137,24 +142,79 @@
 			return $request;
 		}
 
-		public function updatePerfil(int $idUsuario, string $nombre, string $apellido, int $telefono, string $password){
+		public function updatePerfil(int $idUsuario, string $nombre, string $foto, int $telefono, string $direccion,
+			 int $department, int $city, int $id, string $identification, string $password){
+
 			$this->intIdUsuario = $idUsuario;
 			$this->strNombre = $nombre;
-			$this->strApellido = $apellido;
+			$this->strPicture = $foto;
 			$this->intTelefono = $telefono;
+			$this->strAddress = $direccion;
+			$this->intDepartmentId = $department;
+			$this->intCityId = $city;
+			$this->intTypeId = $id;
+			$this->strIdentification = $identification;
 			$this->strPassword = $password;
 
 			if($this->strPassword != ""){
-				$sql = "UPDATE persona SET first_name=?, last_name=?, phone=?, password=?
+				$sql = "UPDATE persona SET 
+								first_name=?, 
+								picture=?, 
+								phone=?,
+								address=?,
+								department_id=?,
+								city_id=?,
+								type_id=?,
+								identification=?,
+								password=?
 						WHERE id_person = $this->intIdUsuario";
-				$arrData = array($this->strNombre,$this->strApellido,$this->intTelefono,$this->strPassword);
+				$arrData = array($this->strNombre,
+								$this->strPicture,
+								$this->intTelefono,
+								$this->strAddress,
+								$this->intDepartmentId,
+								$this->intCityId,
+								$this->intTypeId,
+								$this->strIdentification,
+								$this->strPassword);
 
 			}else{
-				$sql = "UPDATE persona SET first_name=?, last_name=?, phone=?
+				$sql = "UPDATE persona SET 
+								first_name=?, 
+								picture=?, 
+								phone=?,
+								address=?,
+								department_id=?,
+								city_id=?,
+								type_id=?,
+								identification=?
 						WHERE id_person = $this->intIdUsuario";
-				$arrData = array($this->strNombre,$this->strApellido,$this->intTelefono);
+				$arrData = array($this->strNombre,
+								$this->strPicture,
+								$this->intTelefono,
+								$this->strAddress,
+								$this->intDepartmentId,
+								$this->intCityId,
+								$this->intTypeId,
+								$this->strIdentification,
+								);
 			}
 			$request = $this->update($sql,$arrData);
+			return $request;
+		}
+		public function selectId(){
+			$sql ="SELECT * FROM identification";
+			$request = $this->select_all($sql);
+			return $request;
+		}
+		public function selectDepartamento(){
+			$sql ="SELECT * FROM departamentos";
+			$request = $this->select_all($sql);
+			return $request;
+		}
+		public function selectCiudad($deparment){
+			$sql = "SELECT * FROM municipios WHERE departamento_id = $deparment";
+			$request = $this->select_all($sql);
 			return $request;
 		}
 	}

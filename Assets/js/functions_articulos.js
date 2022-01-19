@@ -62,7 +62,7 @@ tableArticulo = $('#tableArticulos').dataTable( {
     "responsieve":"true",
     "bDestroy": true,
     "iDisplayLength": 10,
-    "order":[[0,"asc"]]  
+    "order":[[3,"desc"]]  
 });
 
 tablePapelera = $('#tablePaper').dataTable( {
@@ -182,6 +182,7 @@ window.addEventListener('load',function(){
         e.preventDefault();
 
         let strNombre = document.querySelector('#txtNombre').value;
+        let strTitulo = document.querySelector("#txtTitulo").value;
         let strDescripcion = document.querySelector('#txtDescripcion').value;
         //let urlImage = document.querySelector('#urlImage').value;
         let intCategoria = document.querySelector('#listCategoria').value;
@@ -191,8 +192,12 @@ window.addEventListener('load',function(){
             swal("Atención", "Todos los campos son obligatorios." , "error");
             return false;
         }
-        if(strNombre.length > 80){
-            swal("Atención", "El título permite máximo 80 carácteres" , "error");
+        if(strNombre.length > 30){
+            swal("Atención", "El título permite máximo 30 carácteres" , "error");
+            return false;
+        }
+        if(strTitulo.length > 70){
+            swal("Atención", "El título permite máximo 70 carácteres" , "error");
             return false;
         }
 
@@ -537,7 +542,7 @@ function fntEditInfo(idarticulo){
                         htmlTags += `<div id="div${key}">
                             <input type="hidden" value="${objDataTags[p].tag_id}" id="tag${key}">
                             <button  class="btnDeleteTag btn-outline-secondary btn-sm" 
-                            type="button" onclick="fntDelTag('#div${key}')">${objDataTags[p].tagtitle}</button></div>
+                            type="button" onclick="fntDelTag('#div${key}')">#${objDataTags[p].tagtitle}</button></div>
                             `
                     }
                 }

@@ -6,6 +6,7 @@
         public $intNombre;
         public $intCategoria;
         public $strTitulo;
+        public $strTituloC;
         public $strDescripcion;
         public $intStatus;
         public $strPortada;
@@ -16,23 +17,24 @@
 		
 			parent::__construct();
 		}	
-        public function insertArticulo($nombre, $categoria,$titulo, $descripcion,$ruta,$status){
+        public function insertArticulo($nombre, $categoria,$titulo,$tituloC,$descripcion,$ruta,$status){
     
             $return = "";
             $this->intNombre = $nombre;
             $this->intCategoria = $categoria;
             $this->strTitulo = $titulo;
+            $this->strTituloC = $tituloC;
             $this->strDescripcion = $descripcion;
             //$this->strPortada = $portada;
             $this->strRuta = $ruta;
             $this->intStatus = $status;
     
-            $sql = "SELECT * FROM post WHERE title = '{$this->strTitulo}' ";
+            $sql = "SELECT * FROM post WHERE title = '{$this->strTitulo}' AND titlec = '{$this->strTituloC}' AND person_id = $this->intNombre";
             $request = $this->select_all($sql);
     
             if(empty($request)){
-                $query_insert  = "INSERT INTO post(person_id,topics_id,title,description,route,status) VALUES(?,?,?,?,?,?)";
-                $arrData = array($this->intNombre, $this->intCategoria, $this->strTitulo, $this->strDescripcion,$this->strRuta, $this->intStatus);
+                $query_insert  = "INSERT INTO post(person_id,topics_id,title,titlec,description,route,status) VALUES(?,?,?,?,?,?,?)";
+                $arrData = array($this->intNombre, $this->intCategoria, $this->strTitulo,$this->strTituloC, $this->strDescripcion,$this->strRuta, $this->intStatus);
                 $request_insert = $this->insert($query_insert,$arrData);
                 $return = $request_insert;
             }else{
@@ -41,11 +43,12 @@
             return $return;
         }
 
-        public function updateArticulo($idpost, $categoria,$titulo, $descripcion,$ruta,$status){
+        public function updateArticulo($idpost, $categoria,$titulo,$tituloC, $descripcion,$ruta,$status){
             
             $this->intIdPost = $idpost;
             $this->intCategoria = $categoria;
             $this->strTitulo = $titulo;
+            $this->strTituloC = $tituloC;
             $this->strDescripcion = $descripcion;
             //$this->strPortada = $portada;
             $this->strRuta = $ruta;
@@ -56,9 +59,10 @@
     
             if(empty($request)){
             
-                $sql = "UPDATE post SET topics_id=?, title=?, description=?, route=?, status=? WHERE idpost = $this->intIdPost";
+                $sql = "UPDATE post SET topics_id=?, title=?,titlec=? description=?, route=?, status=? WHERE idpost = $this->intIdPost";
                 $arrData = array($this->intCategoria,
                                 $this->strTitulo,
+                                $this->strTituloC,
                                 $this->strDescripcion,
                                 $this->strRuta,
                                 $this->intStatus
@@ -88,19 +92,19 @@
             $sql = "SELECT 
             p.idpost,
             p.title, 
+            p.titlec,
             p.person_id, 
             p.topics_id, 
             p.status,
             p.route,
-            DATE_FORMAT(p.datecreated, '%d/%b/%Y') as date, 
+            DATE_FORMAT(p.datecreated, '%Y-%m-%d') as date, 
             u.id_person, 
             u.first_name, 
             t.idtopic, 
             t.name as categoria
             FROM post p
             INNER JOIN persona u, topics t
-            WHERE p.topics_id = t.idtopic  AND p.status !=0 $post
-            ORDER BY p.idpost DESC";
+            WHERE p.topics_id = t.idtopic  AND p.status !=0 $post";
             $request = $this->select_all($sql);
             return $request;
         }
@@ -115,11 +119,12 @@
             $sql = "SELECT 
             p.idpost,
             p.title, 
+            p.titlec,
             p.person_id, 
             p.topics_id, 
             p.status,
             p.route,
-            DATE_FORMAT(p.datecreated, '%d/%b/%Y') as date, 
+            DATE_FORMAT(p.datecreated, '%Y-%m-%d') as date, 
             u.id_person, 
             u.first_name, 
             t.idtopic, 
@@ -138,7 +143,9 @@
                     p.person_id, 
                     p.topics_id, 
                     u.id_person, 
-                    t.idtopic, p.title, 
+                    t.idtopic, 
+                    p.title, 
+                    p.titlec,
                     p.description,concat(u.first_name,' ',u.last_name) as autor, 
                     p.image, 
                     p.status,

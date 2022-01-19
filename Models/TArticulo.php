@@ -12,7 +12,7 @@
         public function getArticulosT(){
             $this->con = new Mysql();
             $sql = "SELECT p.person_id,p.idpost,p.topics_id,p.description, p.title, DATE_FORMAT(p.datecreated, '%d/%b/%Y') as date, p.image, p.route, p.status, t.idtopic, 
-                            t.name as categoria, e.id_person,e.first_name, e.last_name 
+                            t.name as categoria, e.id_person,e.first_name
                     FROM post p
                     INNER JOIN topics t, persona e
                     WHERE p.topics_id = t.idtopic AND p.person_id = e.id_person AND p.status = 1
@@ -38,7 +38,7 @@
             if(!empty($request)){
                 $this->strCategoria = $request['name'];
                 $sql = "SELECT p.person_id,p.idpost,p.topics_id,p.description, p.title, DATE_FORMAT(p.datecreated, '%d/%b/%Y') as date, p.image, p.route, p.status, t.idtopic, 
-                                t.name as categoria, e.id_person,e.first_name, e.last_name 
+                                t.name as categoria, e.id_person,e.first_name
                         FROM post p
                         INNER JOIN topics t, persona e
 
@@ -69,7 +69,7 @@
                     t.idtopic, 
                     p.title, 
                     p.description,
-                    concat(u.first_name,' ',u.last_name) as autor, 
+                    u.first_name as autor, 
                     DATE_FORMAT(p.datecreated, '%d/%b/%Y') as date,
                     p.image, 
                     p.status, 
@@ -96,7 +96,7 @@
 
             $this->con = new Mysql();
             $sql = "SELECT p.person_id,p.idpost,p.topics_id,p.description, p.title, DATE_FORMAT(p.datecreated, '%d/%b/%Y') as date, p.image, p.route, p.status, t.idtopic, 
-                            t.name as categoria, e.id_person,e.first_name, e.last_name 
+                            t.name as categoria, e.id_person,e.first_name
                     FROM post p
                     INNER JOIN topics t, persona e
                     WHERE p.topics_id = t.idtopic AND p.person_id = e.id_person  AND p.status =1 $this->intIdCategoria
@@ -116,7 +116,7 @@
         public function getArticuloBanner(){
             $this->con = new Mysql();
             $sql = "SELECT p.person_id,p.idpost,p.topics_id,p.description, p.title, DATE_FORMAT(p.datecreated, '%d/%b/%Y') as date, p.image, p.route, p.status, t.idtopic, 
-                            t.name as categoria, e.id_person,e.first_name, e.last_name 
+                            t.name as categoria, e.id_person,e.first_name 
                     FROM post p
                     INNER JOIN topics t, persona e
                     WHERE p.topics_id = t.idtopic AND p.person_id = e.id_person AND p.status =1

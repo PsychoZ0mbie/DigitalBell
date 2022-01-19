@@ -6,7 +6,6 @@
 			
 			parent::__construct();
 			session_start();
-			//session_regenerate_id(true);
 			if(empty($_SESSION['login'])){
 				header('Location: '.base_url());
 				die();
@@ -181,14 +180,34 @@
 
 		public function putPerfil(){
 			if($_POST){
-
-				if(empty($_POST['txtNombre']) || empty($_POST['txtApellido']) || empty($_POST['txtTelefono'])){
+				if(empty($_POST['txtNombre'])  || empty($_POST['txtTelefono']) ||empty($_POST['txtId'])){
 					$arrResponse = array("status" => false, "msg" => 'Datos incorrectos.');
 				}else{
 					$idUsuario = $_SESSION['idUser'];
 					$strNombre = strClean($_POST['txtNombre']);
-					$strApellido = strClean($_POST['txtApellido']);
 					$intTelefono = intval(strClean($_POST['txtTelefono']));
+					$intDepartment = intval($_POST['listDepartamento']);
+					$intCity = intval($_POST['listCiudad']);
+					$intId = intval($_POST['listId']);
+					$strDireccion = strClean($_POST['txtDir']);
+					$strId = strClean($_POST['txtId']);
+					$foto = "";
+					$foto_perfil="";
+
+					$request = $this->model->selectUsuario($idUsuario);
+					//dep($request);exit;
+					if($_FILES['profile-img']==""){
+						$foto_perfil =$request['picture'];
+					}else{
+						deleteFile($request['picture']);
+						$foto = $_FILES['profile-img'];
+						$foto_perfil = 'perfil_'.bin2hex(random_bytes(6)).'.jpg';
+					}
+					
+						
+					
+					
+
 					$strPassword = "";
 					if(!empty($_POST['txtPassword'])){
 						$strPassword = hash("SHA256",$_POST['txtPassword']);
@@ -196,11 +215,19 @@
 	
 					$request_user = $this->model->updatePerfil($idUsuario,
 																$strNombre,
-																$strApellido,
+																$foto_perfil,
 																$intTelefono,
+																$strDireccion,
+																$intDepartment,
+																$intCity,
+																$intId,
+																$strId,
 																$strPassword);
 					
 					if($request_user){
+						if($foto!=""){
+							uploadImage($foto,$foto_perfil);
+						}
 						sessionUser($_SESSION['idUser']);
 						$arrResponse = array('status'=> true, 'msg' => 'Datos Actualizados correctamente.');
 					}else{
@@ -210,6 +237,61 @@
 				echo json_encode($arrResponse,JSON_UNESCAPED_UNICODE);
 			}
 			die();
+		}
+
+		public function getSelectId(){
+			$htmlOptions = "";
+			$arrData = $this->model->selectId();
+			if(count($arrData) > 0 ){
+				for ($i=0; $i < count($arrData); $i++) { 
+					if($_SESSION['userData']['type_id'] == $arrData[$i]['id']){
+						$htmlOptions .= '<option value="'.$arrData[$i]['id'].'" selected>'.$arrData[$i]['type'].'</option>';
+					}else{
+						$htmlOptions .= '<option value="'.$arrData[$i]['id'].'">'.$arrData[$i]['type'].'</option>';
+					}
+				}
+			}
+			echo $htmlOptions;
+			die();	
+		}
+		
+		public function getSelectDepartamentos(){
+			$htmlDepartamento="";
+			$htmlCiudad="";
+			$arrDepartment = $this->model->selectDepartamento();
+			$arrCity = $this->model->selectCiudad($_SESSION['userData']['department_id']);
+			if(count($arrDepartment) > 0){
+				for ($i=0; $i < count($arrDepartment) ; $i++) { 
+					if($_SESSION['userData']['department_id']== $arrDepartment[$i]['id_departamento']){
+						$htmlDepartamento .= '<option value="'.$arrDepartment[$i]['id_departamento'].'" selected>'.$arrDepartment[$i]['departamento'].'</option>';
+					}else{
+						$htmlDepartamento .= '<option value="'.$arrDepartment[$i]['id_departamento'].'">'.$arrDepartment[$i]['departamento'].'</option>';
+					}
+				}
+			}
+			if(count($arrCity) > 0){
+				for ($i=0; $i < count($arrCity); $i++) { 
+					if($_SESSION['userData']['city_id']== $arrCity[$i]['id_municipio']){
+						$htmlCiudad .= '<option value="'.$arrCity[$i]['id_municipio'].'" selected>'.$arrCity[$i]['municipio'].'</option>';
+					}else{
+						$htmlCiudad .= '<option value="'.$arrCity[$i]['id_municipio'].'">'.$arrCity[$i]['municipio'].'</option>';
+					}
+				}
+				$arrResponse = array("department" =>$htmlDepartamento, "city"=>$htmlCiudad);
+			}
+			echo json_encode($arrResponse,JSON_UNESCAPED_UNICODE);
+			die();
+		}
+
+		public function getSelectCity($department){
+			$htmlCiudad="";
+			$arrData = $this->model->selectCiudad($department);
+			if(count($arrData)>0){
+				for ($i=0; $i < count($arrData); $i++) { 
+					$htmlCiudad .= '<option value="'.$arrData[$i]['id_municipio'].'" selected>'.$arrData[$i]['municipio'].'</option>';
+				}
+			}
+			echo $htmlCiudad;
 		}
 	}
  ?>

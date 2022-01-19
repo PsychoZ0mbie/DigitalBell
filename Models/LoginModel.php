@@ -29,16 +29,21 @@
             //BUSCAR ROL
             $sql = "SELECT p.id_person,
                             p.first_name,
-                            p.last_name,
+                            p.picture,
                             p.phone,
+                            p.address,
                             p.email,
+                            p.department_id,
+                            p.city_id,
+                            P.type_id,
+                            p.identification,
                             r.idrol,
                             r.rolname,
                             p.status
                     FROM persona p
-                    INNER JOIN rol r
+                    INNER JOIN rol r 
                     ON p.rolid = r.idrol
-                    WHERE p.id_person = $this->intIdUsuario";
+                    WHERE p.id_person = $this->intIdUsuario ";
             $request = $this->select($sql);
             $_SESSION['userData'] = $request;
             return $request;
@@ -46,7 +51,7 @@
 
         public function getUserEmail(string $email){
             $this->strUsuario = $email;
-            $sql = "SELECT id_person, first_name, last_name, status FROM persona WHERE
+            $sql = "SELECT id_person, first_name, status FROM persona WHERE
                     email='$this->strUsuario' and status=1";
             $request = $this->select($sql);
             return $request;

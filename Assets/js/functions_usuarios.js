@@ -142,18 +142,43 @@ document.addEventListener('DOMContentLoaded',function(){
 
         }
     }
-    //Actualizar perfil
+    ///////////////////////////////////////Actualizar perfil
+    if(document.querySelector("#profile-img")){
+        let foto = document.querySelector("#profile-img");
+        foto.onchange = function(e) {
+            let uploadFoto = document.querySelector("#profile-img").value;
+            let fileimg = document.querySelector("#profile-img").files;
+            let nav = window.URL || window.webkitURL;
+            if(uploadFoto !=''){
+                let type = fileimg[0].type;
+                let name = fileimg[0].name;
+                if(type != 'image/jpeg' && type != 'image/jpg' && type != 'image/png'){
+                    swal("Error","El archivo no es válido, inténtelo de nuevo","error");
+                    foto.value="";
+                    return false;
+                }else{  
+                    let objeto_url = nav.createObjectURL(this.files[0]);
+                    document.querySelector('.profile-image img').setAttribute("src",objeto_url);
+                }
+            }
+        }
+    }
     if(document.querySelector("#formPerfil")){
         let formPerfil = document.querySelector("#formPerfil");
         formPerfil.onsubmit = function(e) {
             e.preventDefault();
             let strNombre = document.querySelector('#txtNombre').value;
-            let strApellido = document.querySelector('#txtApellido').value;
+            let intDepartamento = document.querySelector("#listDepartamento").value;
+            let intCiudad = document.querySelector("#listCiudad").value;
+            let strDireccion = document.querySelector('#txtDir').value;
+            let intTipoId = document.querySelector("#listId").value;
+            let strId = document.querySelector("#txtId").value;
             let intTelefono = document.querySelector('#txtTelefono').value;
             let strPassword = document.querySelector('#txtPassword').value;
             let strPasswordConfirm = document.querySelector('#txtPasswordConfirm').value;
+            let fileimg = document.querySelector("#profile-img").files;
 
-            if(strApellido == '' || strNombre == '' || intTelefono == '')
+            if(strDireccion == '' || strNombre == '' || intTelefono == '' || strId == '')
             {
                 swal("Atención", "Todos los campos son obligatorios." , "error");
                 return false;
@@ -195,7 +220,6 @@ document.addEventListener('DOMContentLoaded',function(){
                     let objData = JSON.parse(request.responseText);
                     if(objData.status)
                     {
-                        $('#modalFormPerfil').modal("hide");
                         swal({
                             title: "",
                             text: objData.msg,
@@ -219,7 +243,30 @@ document.addEventListener('DOMContentLoaded',function(){
 }, false);
 
 window.addEventListener('load',function(){
+
+    if(document.querySelector("#listDepartamento")){
+        let dep = document.querySelector("#listDepartamento");
+        dep.onchange= function(){
+            let id = document.querySelector("#listDepartamento").value;
+            let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+            let ajaxUrl = base_url+"/Usuarios/getSelectCity/"+id;
+
+            request.open("GET",ajaxUrl,true);
+            request.send();
+            request.onreadystatechange = function(){
+                if(request.readyState == 4 && request.status == 200){
+                    document.querySelector("#listCiudad").innerHTML = request.responseText;
+                    $("#listCiudad").selectpicker("refresh");
+                    $("#listCiudad").selectpicker({
+                        noneSelectedText : 'Seleccione...'
+                    })
+                }
+            }
+        }
+    }
     fntRolesUsuario();
+    fntId();
+    fntDepartamento();
     //fntViewUsuario();
     //fntEditUsuario();
     //fntDelUsuario();
@@ -313,6 +360,40 @@ function fntRolesUsuario(){
         }
     }
 }
+function fntId(){
+    if(document.querySelector('#listId')){
+
+        let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+        let ajaxUrl  = base_url+'/Usuarios/getSelectId';
+        request.open("GET",ajaxUrl ,true);
+        request.send(); 
+    
+        request.onreadystatechange = function(){
+            if(request.readyState ==4 && request.status ==200){
+                document.querySelector('#listId').innerHTML = request.responseText;
+                $('#listId').selectpicker('render');
+            }
+        }
+    }
+}
+function fntDepartamento(){
+    if(document.querySelector('#listDepartamento')){
+
+        let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+        let ajaxUrl  = base_url+'/Usuarios/getSelectDepartamentos';
+        request.open("GET",ajaxUrl ,true);
+        request.send(); 
+        request.onreadystatechange = function(){
+            if(request.readyState ==4 && request.status ==200){
+                let objData = JSON.parse(request.responseText);
+                document.querySelector('#listDepartamento').innerHTML = objData.department;
+                document.querySelector('#listCiudad').innerHTML = objData.city;
+                $('#listDepartamento').selectpicker('render');
+                $('#listCiudad').selectpicker('render');
+            }
+        }
+    }
+}
 
 function fntDelUsuario(idpersona){
 
@@ -363,8 +444,4 @@ function openModal(){
     document.querySelector('#titleModal').innerHTML = "Nuevo Usuario";
     document.querySelector("#formUsuario").reset();
 	$('#modalFormUsuario').modal('show');
-}
-
-function openModalPerfil(){
-    $('#modalFormPerfil').modal('show');
 }
