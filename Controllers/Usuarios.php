@@ -171,12 +171,13 @@
 			die();
 		}
 		public function perfil(){
-			$data['page_tag'] = "Perfil | DigitalBlog";
-			$data['page_title'] = "Perfil | DigitalBlog";
+			$data['page_tag'] = "Perfil";
+			$data['page_title'] = "Perfil";
 			$data['page_name'] = "perfil";
 			$data['page_functions'] = "functions_usuarios.js";
 			$this->views->getView($this,"perfil",$data);
 		}
+		
 
 		public function putPerfil(){
 			if($_POST){
@@ -195,8 +196,7 @@
 					$foto_perfil="";
 
 					$request = $this->model->selectUsuario($idUsuario);
-					//dep($request);exit;
-					if($_FILES['profile-img']==""){
+					if($_FILES['profile-img']['name'] ==""){
 						$foto_perfil =$request['picture'];
 					}else{
 						deleteFile($request['picture']);

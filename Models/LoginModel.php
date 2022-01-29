@@ -37,13 +37,20 @@
                             p.city_id,
                             P.type_id,
                             p.identification,
+                            p.status,
                             r.idrol,
                             r.rolname,
-                            p.status
+                            b.person_id,
+                            b.topic_id,
+                            b.logo,
+                            b.name,
+                            b.keywords,
+                            b.description,
+                            b.phone as pcorp,
+                            b.email as ecorp
                     FROM persona p
-                    INNER JOIN rol r 
-                    ON p.rolid = r.idrol
-                    WHERE p.id_person = $this->intIdUsuario ";
+                    INNER JOIN rol r, business b 
+                    WHERE p.id_person = $this->intIdUsuario AND b.person_id = p.id_person AND p.rolid = r.idrol";
             $request = $this->select($sql);
             $_SESSION['userData'] = $request;
             return $request;

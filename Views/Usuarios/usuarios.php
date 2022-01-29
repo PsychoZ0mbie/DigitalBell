@@ -35,7 +35,6 @@
                         <tr>
                           <th>ID</th>
                           <th>Nombres</th>
-                          <th>Apellidos</th>
                           <th>Teléfono</th>
                           <th>Email</th>
                           <th>Rol</th>

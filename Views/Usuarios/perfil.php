@@ -1,5 +1,13 @@
 <?php 
   headerAdmin($data); 
+
+  $img="";
+
+  if($_SESSION['userData']['picture'] ==""){
+    $img = media()."/images/uploads/avatar.png";
+  }else{
+    $img = media()."/images/uploads/".$_SESSION['userData']['picture'];
+  }
   
 ?>
     <main class="app-content">
@@ -17,17 +25,14 @@
               <div class="timeline-post">
                 <div class="post-media">
                     <h5>Datos personales</h5>
-                    <?php
-                    //dep($_SESSION['userData']);exit;
-                    ?>
                 </div>
                 <form id="formPerfil" name="formPerfil" class="form-horizontal mt-4">
                   <div class="profile-image">
-                    <img src="<?= media();?>/images/uploads/<?=$_SESSION['userData']['picture']?>">
+                    <img src="<?= $img;?>">
                     <label for="profile-img"><i class="fas fa-cloud-upload-alt"></i></label>
                     <input type="file" id="profile-img" name="profile-img">
                   </div>
-                  <div class="form-row">
+                  <div class="form-row mt-4">
                       <div class="form-group col-md-6">
                           <label for="txtNombre">Nombre y Apellido</label>
                           <input type="text" class="form-control" id="txtNombre" name="txtNombre" value="<?= $_SESSION['userData']['first_name']; ?>" required="">

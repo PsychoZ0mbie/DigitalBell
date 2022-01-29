@@ -1,7 +1,9 @@
 body{
     font-family: 'Spartan', sans-serif;
 }
-
+textarea{
+    resize: none;
+}
 .logo{
     font-size: 35px;
     color:rgb(255, 255, 255);
@@ -12,9 +14,8 @@ body{
     color:rgb(255, 255, 255);
 }
 .app-sidebar__user-avatar {
-    width: 48px;
-    background: white;
-    padding: 6px;
+    width: 40px;
+    height: 40px;
 }
 .app-content{
     background-color: #fff;

@@ -8,15 +8,15 @@
 				die();
 			}
 			parent::__construct();
-			getPermisos(6);
+			getPermisos(4);
 		}
 
 		public function Categorias(){
 			if(empty($_SESSION['permisosMod']['r'])){
 				header("Location:".base_url().'/dashboard');
 			}
-			$data['page_tag'] = "Categorias | ".NOMBRE_EMPRESA;
-			$data['page_title'] = "Categorias | ".NOMBRE_EMPRESA;
+			$data['page_tag'] = "Panel de control";
+			$data['page_title'] = "Categorias";
 			$data['page_name'] = "categorias";
 			$data['page_functions'] = "functions_categorias.js";
 			$this->views->getView($this,"categorias",$data);

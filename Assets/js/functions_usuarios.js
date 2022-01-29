@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded',function(){
         "columns":[
             {"data":"id_person"},
             {"data":"first_name"},
-            {"data":"last_name"},
             {"data":"phone"},
             {"data":"email"},
             {"data":"rolname"},
